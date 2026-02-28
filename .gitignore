@@ -1,2 +1,5 @@
 .vercel
 .env*.local
+.env.production
+dist/
+seniorvoice/dist/
