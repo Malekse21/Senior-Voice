@@ -2,7 +2,8 @@
 
 Senior Voice is an AI-powered voice assistant and companion designed specifically for seniors. Built with a warm, premium interface inspired by Home Instead, it provides a safe and easy-to-use digital space for tracking medications, managing contacts, and general daily support.
 
-sama-seniorvoice.vercel.app
+DEMO VIDEO:https://youtu.be/epowFwIr8jg
+APP LINK: sama-seniorvoice.vercel.app
 ## 🌟 Key Features
 
 - **Voice Interaction**: Natural communication through speech synthesis and recognition.
