@@ -56,18 +56,6 @@ export default function MainPage({ screen, setScreen }) {
   const [now, setNow] = useState(() => new Date())
 
   useEffect(() => {
-    const timer = setInterval(() => setNow(new Date()), 60000)
-    return () => clearInterval(timer)
-  }, [])
-
-  const startRecording = async () => {
-    const keys = getStore('api_keys')
-    const groqKey = import.meta.env.VITE_GROQ_API_KEY || keys?.groq
-    if (!groqKey) {
-      speak('Veuillez configurer votre clÃ© Groq d\'abord')
-      setScreen('settings')
-      return
-    }
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
