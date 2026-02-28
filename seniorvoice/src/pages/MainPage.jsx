@@ -55,8 +55,7 @@ export default function MainPage({ screen, setScreen }) {
   const isRecording = useRef(false)
   const [now, setNow] = useState(() => new Date())
 
-  useEffect(() => {
-
+  const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       const mimeType = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg'].find(t => MediaRecorder.isTypeSupported(t)) || 'audio/webm'
