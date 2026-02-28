@@ -19,5 +19,11 @@
         { "key": "Service-Worker-Allowed", "value": "/" }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
