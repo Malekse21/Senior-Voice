@@ -105,6 +105,41 @@ const tools = {
     return { weather: text, city: params.city }
   },
 
+  music_player: async (params) => {
+    const query = (params.query || params.song || 'musique tunisienne').trim()
+    const platform = (params.platform || 'youtube').toLowerCase()
+    const base = platform === 'spotify' ? 'https://open.spotify.com/search/' : 'https://www.youtube.com/results?search_query='
+    const url = base + encodeURIComponent(query)
+
+    // Use same-tab navigation to avoid popup blockers on mobile browsers.
+    window.location.assign(url)
+    return { success: true, query, platform, url }
+  },
+
+  knowledge_lookup: async (params) => {
+    const topic = (params.topic || params.query || '').trim()
+    if (!topic) return { error: 'missing_topic', summary: 'Sujet manquant.' }
+
+    const lang = ['ar', 'fr', 'en'].includes((params.language || '').toLowerCase())
+      ? params.language.toLowerCase()
+      : 'fr'
+    const url = `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(topic.replace(/\s+/g, '_'))}`
+
+    const res = await fetch(url)
+    if (!res.ok) {
+      return { error: 'not_found', topic, summary: `Je n'ai pas trouvé d'information fiable sur ${topic}.` }
+    }
+
+    const data = await res.json()
+    const summary = (data.extract || '').trim()
+    return {
+      topic,
+      title: data.title || topic,
+      summary: summary || `Je n'ai pas trouvé de résumé clair pour ${topic}.`,
+      source: data.content_urls?.desktop?.page || null
+    }
+  },
+
   news_fetcher: async () => {
     const rssUrl = encodeURIComponent('https://www.tap.info.tn/fr/?format=feed&type=rss')
     const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url=' + rssUrl)
@@ -184,18 +219,24 @@ OUTILS DISPONIBLES:
 4. medication_tracker - params: { action: "taken|list_due", medication_name }
 5. calendar_manager - params: { action: "add|list_upcoming", title, date, time, doctor }
 6. weather_fetcher - params: { city }
-7. news_fetcher - params: { category }
-8. smart_home_controller - params: { device, action: "turn_on|turn_off" }
-9. emergency_responder - params: { severity, symptoms }
+7. music_player - params: { query, platform: "youtube|spotify" }
+8. knowledge_lookup - params: { topic, language: "fr|ar|en" }
+9. news_fetcher - params: { category }
+10. smart_home_controller - params: { device, action: "turn_on|turn_off" }
+11. emergency_responder - params: { severity, symptoms }
 
 R\u00c8GLES DE D\u00c9CISION:
 - "\u0639\u064a\u0651\u0637 \u0639\u0644\u0649 \u0648\u0644\u062f\u064a" ou "appelle mon fils" \u2192 contact_caller
 - "\u0641\u0643\u0651\u0631\u0646\u064a" ou "rappelle-moi" \u2192 reminder_manager
 - "\u0646\u0633\u064a\u062a \u0627\u0644\u062f\u0648\u0627\u0621" ou "j'ai pris mon m\u00e9dicament" \u2192 medication_tracker
+- "\u0634\u063a\u0651\u0644 \u0623\u063a\u0646\u064a\u0629" / "mets une chanson" / "play song" \u2192 music_player
+- "qui est ..." / "donne-moi des infos sur ..." / "information about ..." \u2192 knowledge_lookup
+- "m\u00e9t\u00e9o" / "temps aujourd'hui" \u2192 weather_fetcher
 - "j'ai mal" + urgent \u2192 emergency_responder
 - Plusieurs actions possibles \u2192 appelle plusieurs outils
 - Si la demande est ambigu\u00eb -> choisis l'interpr\u00e9tation la plus utile et ex\u00e9cute-la
 - Ne demande pas de clarification; fais un meilleur effort autonome
+- N'attends jamais de confirmation avant d'ex\u00e9cuter une action non dangereuse (m\u00e9t\u00e9o, musique, information, actualit\u00e9s, rappels).
 
 RETOURNE UNIQUEMENT CE JSON VALIDE:
 {

@@ -5,7 +5,7 @@ import { getStore, setStore } from '../services/storage'
 import { speak } from '../services/speech'
 import { transcribeAudio, callGroq } from '../services/api'
 import { executeTool, buildAgentPrompt } from '../services/tools'
-import { Mic, Square, Volume2, Loader, Settings, CheckCircle, XCircle, RefreshCw, ThumbsUp } from 'lucide-react'
+import { Mic, Square, Volume2, Loader, Settings, CheckCircle, XCircle, RefreshCw } from 'lucide-react'
 
 function parseAgentPlan(raw) {
   const fallback = {
@@ -132,9 +132,24 @@ export default function MainPage({ screen, setScreen }) {
         }
       }
 
-      speak(plan.response_voice || plan.understood || 'C\'est fait.')
+      let finalVoice = plan.response_voice || plan.understood || 'C\'est fait.'
+      for (const item of toolResults) {
+        if (!item.success) continue
+        if (item.tool === 'weather_fetcher' && item.result?.weather) {
+          const city = item.result.city || 'votre ville'
+          finalVoice = `La météo à ${city}: ${item.result.weather}`
+        }
+        if (item.tool === 'knowledge_lookup' && item.result?.summary) {
+          finalVoice = item.result.summary
+        }
+        if (item.tool === 'music_player' && item.result?.query) {
+          finalVoice = `Je lance ${item.result.query} sur ${item.result.platform || 'YouTube'}.`
+        }
+      }
+
+      speak(finalVoice)
       setMicState('speaking')
-      setResult({ ...plan, toolResults })
+      setResult({ ...plan, response_voice: finalVoice, toolResults })
 
       const history = getStore('history') || []
       history.unshift({
@@ -279,10 +294,10 @@ export default function MainPage({ screen, setScreen }) {
             <p className="text-base text-[#4a5568] mb-5 leading-relaxed">{result.response_voice}</p>
             <div className="flex gap-3">
               <Button onClick={() => { setResult(null); setTranscript('') }} className="flex-1 bg-[#2d6a4f] hover:bg-[#245a42]">
-                <ThumbsUp size={16} className="mr-2" /> Oui, merci
+                Nouvelle demande
               </Button>
               <Button variant="outline" onClick={() => { setResult(null); setTranscript('') }} className="flex-1">
-                <RefreshCw size={16} className="mr-2" /> R&eacute;p&eacute;ter
+                <RefreshCw size={16} className="mr-2" /> Fermer
               </Button>
             </div>
           </Card>
