@@ -75,9 +75,9 @@ export default function MainPage({ screen, setScreen }) {
       mediaRecorder.current.start(100)
       isRecording.current = true
       setMicState('recording')
-      speak('Je vous Ã©coute')
+      speak('Je vous \u00e9coute')
     } catch (err) {
-      speak('Impossible d\'accÃ©der au microphone.')
+      speak('Impossible d\'acc\u00e9der au microphone.')
     }
   }
 
@@ -96,7 +96,8 @@ export default function MainPage({ screen, setScreen }) {
       setLanguage(lang || 'FR')
       await runAgent(text)
     } catch (err) {
-      speak('Une erreur est survenue. RÃ©essayez.')
+      console.error('processRecording error:', err)
+      speak('Une erreur est survenue. R\u00e9essayez.')
       setMicState('idle')
     }
   }
@@ -146,7 +147,8 @@ export default function MainPage({ screen, setScreen }) {
 
       window.speechSynthesis.onend = () => setMicState('idle')
     } catch (err) {
-      speak('Excusez-moi, pouvez-vous rÃ©pÃ©ter ?')
+      console.error('runAgent error:', err)
+      speak('Excusez-moi, pouvez-vous r\u00e9p\u00e9ter ?')
       setMicState('idle')
     }
   }
@@ -159,7 +161,7 @@ export default function MainPage({ screen, setScreen }) {
   const hour = now.getHours()
   let greetingPrefix = 'Bonsoir'
   if (hour >= 6 && hour < 12) greetingPrefix = 'Bonjour'
-  else if (hour >= 12 && hour < 18) greetingPrefix = 'Bon apres-midi'
+  else if (hour >= 12 && hour < 18) greetingPrefix = 'Bon apr\u00e8s-midi'
 
   return (
     <div className="min-h-screen bg-[#fefcf8] pb-24">
@@ -229,7 +231,7 @@ export default function MainPage({ screen, setScreen }) {
           </button>
         </div>
         <p className="mt-5 text-[#6b7a8d] font-medium text-sm">
-          {micState === 'recording' ? 'Appuyer pour arrÃªter' :
+          {micState === 'recording' ? 'Appuyer pour arr\u00eater' :
            micState === 'processing' ? 'Analyse en cours...' :
            micState === 'speaking' ? 'Sama parle...' :
            'Appuyer pour parler'}
@@ -254,7 +256,7 @@ export default function MainPage({ screen, setScreen }) {
       {agentProgress.length > 0 && (
         <div className="max-w-md mx-auto px-4 mb-4">
           <Card className="p-5">
-            <p className="text-sm text-[#6b7a8d] mb-3 font-medium">Sama réfléchit...</p>
+            <p className="text-sm text-[#6b7a8d] mb-3 font-medium">Sama r&eacute;fl&eacute;chit...</p>
             {agentProgress.map((t, i) => (
               <div key={i} className={cn('flex items-center gap-3 p-3 rounded-xl mb-2', 
                 t.status === 'done' ? 'bg-[#2d6a4f]/10' : 
@@ -280,7 +282,7 @@ export default function MainPage({ screen, setScreen }) {
                 <ThumbsUp size={16} className="mr-2" /> Oui, merci
               </Button>
               <Button variant="outline" onClick={() => { setResult(null); setTranscript('') }} className="flex-1">
-                <RefreshCw size={16} className="mr-2" /> RÃ©pÃ©ter
+                <RefreshCw size={16} className="mr-2" /> R&eacute;p&eacute;ter
               </Button>
             </div>
           </Card>
@@ -291,7 +293,3 @@ export default function MainPage({ screen, setScreen }) {
     </div>
   )
 }
-
-
-
-

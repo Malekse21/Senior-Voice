@@ -1,9 +1,9 @@
 ﻿import { getStore, setStore } from './storage'
 import { speak } from './speech'
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════
 // AGENT TOOLS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════
 const tools = {
   reminder_manager: async (params) => {
     if (params.action === 'set') {
@@ -36,7 +36,7 @@ const tools = {
       c.nickname?.includes(params.contact_name) ||
       params.contact_name.includes(c.nickname)
     )
-    if (!contact) return { error: 'not_found', message: 'Contact non trouvÃ©' }
+    if (!contact) return { error: 'not_found', message: 'Contact non trouv\u00e9' }
     window.location.href = 'tel:' + contact.phone
     return { success: true, calling: contact.name, phone: contact.phone }
   },
@@ -65,7 +65,7 @@ const tools = {
         status: 'taken'
       })
       setStore('medication_log', log)
-      return { success: true, message: params.medication_name + ' marquÃ© comme pris' }
+      return { success: true, message: params.medication_name + ' marqu\u00e9 comme pris' }
     } else if (params.action === 'list_due') {
       const hour = new Date().getHours()
       const meds = getStore('medications') || []
@@ -117,9 +117,9 @@ const tools = {
     const ha = getStore('ha_config')
     if (ha?.url && ha?.token) {
       const entityMap = {
-        'lumiÃ¨re': 'light.salon',
+        'lumi\u00e8re': 'light.salon',
         'lampe': 'light.salon',
-        'tÃ©lÃ©vision': 'media_player.tv',
+        't\u00e9l\u00e9vision': 'media_player.tv',
         'tv': 'media_player.tv',
         'climatiseur': 'climate.salon',
         'ventilateur': 'fan.salon'
@@ -137,11 +137,11 @@ const tools = {
   },
 
   emergency_responder: async (params) => {
-    speak('Attention ! Restenez calme. J\'appelle les secours.')
+    speak('Attention ! Restez calme. J\'appelle les secours.')
     const contacts = getStore('contacts') || []
     const emergency = contacts.find(c => c.is_emergency)
     if (emergency) {
-      const msg = 'URGENT: ' + (getStore('user')?.name || 'Votre proche') + ' a besoin d\'aide immÃ©diate. SymptÃ´mes: ' + params.symptoms
+      const msg = 'URGENT: ' + (getStore('user')?.name || 'Votre proche') + ' a besoin d\'aide imm\u00e9diate. Sympt\u00f4mes: ' + params.symptoms
       window.open('https://wa.me/' + emergency.phone.replace(/\D/g, '') + '?text=' + encodeURIComponent(msg))
     }
     setTimeout(() => { window.location.href = 'tel:190' }, 3000)
@@ -154,23 +154,23 @@ export async function executeTool(name, params) {
   return tools[name](params)
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════
 // AGENT PROMPT
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════
 export function buildAgentPrompt(transcript, memory) {
   return `
 Tu es "Sama", l'assistante vocale personnelle de ${memory.name || 'cette personne'}.
-Tu es comme un membre de la famille â€” chaleureux, patient, bienveillant, jamais pressÃ©.
-Tu t'exprimes en franÃ§ais simple OU en arabe dialectal tunisien selon comment la personne parle.
-Tu comprends les phrases hÃ©sitantes, incomplÃ¨tes, et le mÃ©lange franÃ§ais-arabe dialectal tunisien.
-Tu agis de maniere autonome: tu prends l'initiative avec la meilleure action possible sans demander de clarification.
+Tu es comme un membre de la famille \u2013 chaleureux, patient, bienveillant, jamais press\u00e9.
+Tu t'exprimes en fran\u00e7ais simple OU en arabe dialectal tunisien selon comment la personne parle.
+Tu comprends les phrases h\u00e9sitantes, incompl\u00e8tes, et le m\u00e9lange fran\u00e7ais-arabe dialectal tunisien.
+Tu agis de mani\u00e8re autonome: tu prends l'initiative avec la meilleure action possible sans demander de clarification.
 
 PROFIL COMPLET DE L'UTILISATEUR:
 Contacts: ${JSON.stringify(memory.contacts)}
-MÃ©dicaments: ${JSON.stringify(memory.medications)}
+M\u00e9dicaments: ${JSON.stringify(memory.medications)}
 Rendez-vous: ${JSON.stringify(memory.appointments)}
-Historique rÃ©cent: ${JSON.stringify(memory.history)}
-PrÃ©fÃ©rences: ${JSON.stringify(memory.preferences)}
+Historique r\u00e9cent: ${JSON.stringify(memory.history)}
+Pr\u00e9f\u00e9rences: ${JSON.stringify(memory.preferences)}
 
 CE QUE LA PERSONNE VIENT DE DIRE:
 "${transcript}"
@@ -188,19 +188,19 @@ OUTILS DISPONIBLES:
 8. smart_home_controller - params: { device, action: "turn_on|turn_off" }
 9. emergency_responder - params: { severity, symptoms }
 
-RÃˆGLES DE DÃ‰CISION:
-- "Ø¹ÙŠÙ‘Ø· Ø¹Ù„Ù‰ ÙˆÙ„Ø¯ÙŠ" ou "appelle mon fils" â†’ contact_caller
-- "ÙÙƒÙ‘Ø±Ù†ÙŠ" ou "rappelle-moi" â†’ reminder_manager
-- "Ù†Ø³ÙŠØª Ø§Ù„Ø¯ÙˆØ§Ø¡" ou "j'ai pris mon mÃ©dicament" â†’ medication_tracker
-- "j'ai mal" + urgent â†’ emergency_responder
-- Plusieurs actions possibles â†’ appelle plusieurs outils
-- Si la demande est ambigue -> choisis l'interpretation la plus utile et execute-la
+R\u00c8GLES DE D\u00c9CISION:
+- "\u0639\u064a\u0651\u0637 \u0639\u0644\u0649 \u0648\u0644\u062f\u064a" ou "appelle mon fils" \u2192 contact_caller
+- "\u0641\u0643\u0651\u0631\u0646\u064a" ou "rappelle-moi" \u2192 reminder_manager
+- "\u0646\u0633\u064a\u062a \u0627\u0644\u062f\u0648\u0627\u0621" ou "j'ai pris mon m\u00e9dicament" \u2192 medication_tracker
+- "j'ai mal" + urgent \u2192 emergency_responder
+- Plusieurs actions possibles \u2192 appelle plusieurs outils
+- Si la demande est ambigu\u00eb -> choisis l'interpr\u00e9tation la plus utile et ex\u00e9cute-la
 - Ne demande pas de clarification; fais un meilleur effort autonome
 
 RETOURNE UNIQUEMENT CE JSON VALIDE:
 {
   "understood": "ce que tu as compris",
-  "response_voice": "rÃ©ponse Ã  dire Ã  voix haute",
+  "response_voice": "r\u00e9ponse \u00e0 dire \u00e0 voix haute",
   "tools_to_call": [{ "tool": "nom_outil", "params": {}, "reason": "pourquoi" }],
   "needs_clarification": false,
   "clarification_question": null,
@@ -209,9 +209,9 @@ RETOURNE UNIQUEMENT CE JSON VALIDE:
 `
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════
 // PROACTIVE CHECK
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════
 export function proactiveCheck(onAlert) {
   const hour = new Date().getHours()
   const meds = getStore('medications') || []
@@ -226,7 +226,7 @@ export function proactiveCheck(onAlert) {
       const due = meds.filter(m => m.schedule?.includes(period))
       if (due.length > 0) {
         const names = due.map(m => m.name).join(', ')
-        onAlert('N\'oubliez pas vos mÃ©dicaments de ' + period + ' : ' + names)
+        onAlert('N\'oubliez pas vos m\u00e9dicaments de ' + period + ' : ' + names)
       }
     }
   })
@@ -251,8 +251,7 @@ export function proactiveCheck(onAlert) {
     const tomorrowStr = tomorrow.toDateString()
     const tAppts = appts.filter(a => new Date(a.date).toDateString() === tomorrowStr)
     if (tAppts.length > 0) {
-      onAlert('Rappel: ' + tAppts[0].title + ' demain Ã  ' + tAppts[0].time)
+      onAlert('Rappel: ' + tAppts[0].title + ' demain \u00e0 ' + tAppts[0].time)
     }
   }
 }
-
