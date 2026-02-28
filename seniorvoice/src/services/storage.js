@@ -24,7 +24,7 @@ function defaultFor(key) {
     history: [],
     preferences: { voice_speed: 0.82 },
     medication_log: [],
-    api_keys: { groq: '', gemini: '' },
+    api_keys: { groq: '' },
     ha_config: { url: '', token: '' },
     onboarded: false
   }
