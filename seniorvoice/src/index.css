@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 33% 98%;
+    --foreground: 213 52% 24%;
+    --card: 0 0% 100%;
+    --card-foreground: 213 52% 24%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 213 52% 24%;
+    --primary: 213 52% 24%;
+    --primary-foreground: 40 33% 98%;
+    --secondary: 216 25% 96%;
+    --secondary-foreground: 213 52% 24%;
+    --muted: 216 25% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 43 68% 47%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 20% 90%;
+    --input: 220 20% 90%;
+    --ring: 43 68% 47%;
+    --radius: 0.75rem;
+
+    --home-navy: #1e3a5f;
+    --home-cream: #fefcf8;
+    --home-light: #f5f7fa;
+    --home-gold: #c9a227;
+    --home-green: #2d6a4f;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Source Sans 3', system-ui, sans-serif;
+    background-color: var(--home-cream);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Lora', Georgia, serif;
+    color: var(--home-navy);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--home-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c8d4;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9aa5b6;
+}
+
+/* Pulse animation for recording */
+.pulse-ring {
+  animation: pulse-ring 1.3s ease-out infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+/* Gold glow animation */
+.gold-glow {
+  box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.4);
+  animation: gold-glow 2s ease-in-out infinite;
+}
+
+@keyframes gold-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(201, 162, 39, 0);
+  }
+}
+
+/* Smooth transitions */
+.transition-warm {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(30, 58, 95, 0.1);
+}

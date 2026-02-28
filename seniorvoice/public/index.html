@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="SeniorVoice — Nour, l'assistante vocale pour les aînés tunisiens">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="SeniorVoice">
+  <title>SeniorVoice — Nour</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232563eb'/><text y='.9em' font-size='70' x='15'>🎙️</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 0 — ONBOARDING
+       ══════════════════════════════════════════ -->
+  <div class="screen" id="screen-onboarding">
+    <div class="onboarding-container">
+      <!-- Progress dots -->
+      <div class="onboarding-dots" id="onboarding-dots">
+        <span class="dot active" data-step="1"></span>
+        <span class="dot" data-step="2"></span>
+        <span class="dot" data-step="3"></span>
+        <span class="dot" data-step="4"></span>
+        <span class="dot" data-step="5"></span>
+      </div>
+
+      <!-- STEP 1 — NAME -->
+      <div class="onboarding-step active" id="ob-step-1">
+        <div class="ob-icon">👋</div>
+        <h1 class="ob-title">Bienvenue !</h1>
+        <p class="ob-subtitle">Comment vous appelez-vous ?</p>
+        <div class="ob-form">
+          <input type="text" class="ob-input" id="ob-name" placeholder="Votre prénom" autocomplete="given-name">
+          <button class="ob-voice-btn" id="ob-name-voice">🎙️ Dire mon prénom</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 — MEDICATIONS -->
+      <div class="onboarding-step" id="ob-step-2">
+        <div class="ob-icon">💊</div>
+        <h1 class="ob-title">Vos médicaments</h1>
+        <p class="ob-subtitle">Ajoutez les médicaments que vous prenez</p>
+        <div class="ob-form">
+          <input type="text" class="ob-input" id="ob-med-name" placeholder="Nom (ex: Amlor)">
+          <input type="text" class="ob-input" id="ob-med-dose" placeholder="Dose (ex: 5mg)">
+          <div class="ob-schedule-row">
+            <label class="ob-check"><input type="checkbox" id="ob-med-matin"> Matin</label>
+            <label class="ob-check"><input type="checkbox" id="ob-med-midi"> Midi</label>
+            <label class="ob-check"><input type="checkbox" id="ob-med-soir"> Soir</label>
+            <label class="ob-check"><input type="checkbox" id="ob-med-nuit"> Nuit</label>
+          </div>
+          <button class="ob-add-btn" id="ob-add-med">+ Ajouter</button>
+        </div>
+        <div class="ob-list" id="ob-med-list"></div>
+        <button class="ob-skip-link" id="ob-skip-meds">Passer →</button>
+      </div>
+
+      <!-- STEP 3 — CONTACTS -->
+      <div class="onboarding-step" id="ob-step-3">
+        <div class="ob-icon">👥</div>
+        <h1 class="ob-title">Vos contacts importants</h1>
+        <p class="ob-subtitle">Ajoutez vos proches pour les appeler facilement</p>
+        <div class="ob-form">
+          <input type="text" class="ob-input" id="ob-con-name" placeholder="Prénom (ex: Mohamed)">
+          <input type="text" class="ob-input" id="ob-con-nick" placeholder="Surnom en arabe (ex: ولدي)" dir="auto">
+          <input type="tel" class="ob-input" id="ob-con-phone" placeholder="Téléphone (ex: +21698000000)">
+          <label class="ob-check ob-emergency-check">
+            <input type="checkbox" id="ob-con-emergency"> ⭐ Contact d'urgence
+          </label>
+          <button class="ob-add-btn" id="ob-add-con">+ Ajouter</button>
+        </div>
+        <div class="ob-list" id="ob-con-list"></div>
+        <p class="ob-hint" id="ob-con-hint">💡 Recommandé : ajoutez au moins un contact d'urgence</p>
+      </div>
+
+      <!-- STEP 4 — APPOINTMENTS -->
+      <div class="onboarding-step" id="ob-step-4">
+        <div class="ob-icon">📅</div>
+        <h1 class="ob-title">Vos rendez-vous</h1>
+        <p class="ob-subtitle">Ajoutez vos prochains rendez-vous médicaux</p>
+        <div class="ob-form">
+          <input type="text" class="ob-input" id="ob-apt-title" placeholder="Titre (ex: Cardiologue)">
+          <input type="text" class="ob-input" id="ob-apt-doctor" placeholder="Nom du médecin">
+          <input type="date" class="ob-input" id="ob-apt-date">
+          <input type="time" class="ob-input" id="ob-apt-time">
+          <button class="ob-add-btn" id="ob-add-apt">+ Ajouter</button>
+        </div>
+        <div class="ob-list" id="ob-apt-list"></div>
+        <button class="ob-skip-link" id="ob-skip-apts">Passer →</button>
+      </div>
+
+      <!-- STEP 5 — SMART HOME -->
+      <div class="onboarding-step" id="ob-step-5">
+        <div class="ob-icon">🏠</div>
+        <h1 class="ob-title">Maison connectée</h1>
+        <p class="ob-subtitle">Optionnel — passez si vous n'avez pas Home Assistant</p>
+        <div class="ob-form">
+          <input type="url" class="ob-input" id="ob-ha-url" placeholder="URL Home Assistant (ex: http://192.168.1.x:8123)">
+          <input type="password" class="ob-input" id="ob-ha-token" placeholder="Token d'accès longue durée">
+        </div>
+        <button class="ob-skip-prominent" id="ob-skip-ha">Passer →</button>
+      </div>
+
+      <!-- FINISH -->
+      <div class="onboarding-step" id="ob-step-finish">
+        <div class="ob-finish-check">✅</div>
+        <h1 class="ob-title" id="ob-finish-title">Bonjour ! Nour est prête. 👋</h1>
+        <p class="ob-subtitle">Votre assistante personnelle vous attend</p>
+        <button class="ob-start-btn" id="ob-start">Commencer →</button>
+      </div>
+
+      <!-- Navigation buttons -->
+      <div class="ob-nav" id="ob-nav">
+        <button class="ob-back-btn" id="ob-back">← Retour</button>
+        <button class="ob-next-btn" id="ob-next">Suivant →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       TOP BAR (hidden on onboarding)
+       ══════════════════════════════════════════ -->
+  <header class="topbar" id="topbar">
+    <div class="topbar-brand">
+      <span class="topbar-logo">🎙️</span>
+      <span class="topbar-title">SeniorVoice</span>
+    </div>
+    <button class="topbar-btn" id="btn-topbar-settings" aria-label="Paramètres">⚙️</button>
+  </header>
+
+  <!-- ══════════════════════════════════════════
+       PROACTIVE ALERT BANNER
+       ══════════════════════════════════════════ -->
+  <div class="alert-banner hidden" id="alert-banner">
+    <span class="alert-text" id="alert-text"></span>
+    <button class="alert-dismiss" id="alert-dismiss" aria-label="Fermer">×</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 1 — MAIN
+       ══════════════════════════════════════════ -->
+  <div class="screen active" id="screen-main">
+
+    <!-- Greeting -->
+    <div class="greeting" id="greeting">
+      <h1 class="greeting-name" id="greeting-name">Bonjour 👋</h1>
+      <p class="greeting-sub" id="greeting-sub">Bonne matinée !</p>
+    </div>
+
+    <!-- Mic Area -->
+    <div class="mic-area">
+      <div class="pulse-ring" id="pulse-ring"></div>
+      <button class="mic-btn" id="mic-btn" aria-label="Appuyer pour parler">
+        <span class="mic-icon" id="mic-icon">🎙️</span>
+        <div class="mic-spinner hidden" id="mic-spinner"></div>
+      </button>
+      <div class="mic-label" id="mic-label">Appuyer pour parler</div>
+      <div class="mic-nour">Sama</div>
+    </div>
+
+    <!-- Transcript Card -->
+    <div class="card card-transcript hidden" id="card-transcript">
+      <div class="card-label">Vous avez dit :</div>
+      <div class="transcript-text" id="transcript-text"></div>
+      <span class="lang-badge" id="lang-badge">FR</span>
+    </div>
+
+    <!-- Agent Progress -->
+    <div class="card card-progress hidden" id="card-progress">
+      <div class="card-label">Sama réfléchit…</div>
+      <div class="tool-list" id="tool-list"></div>
+    </div>
+
+    <!-- Result Card -->
+    <div class="card card-result hidden" id="card-result">
+      <div class="result-understood" id="result-understood"></div>
+      <div class="result-response" id="result-response"></div>
+      <div class="result-actions">
+        <button class="btn btn-confirm" id="btn-confirm">✅ Oui, merci</button>
+        <button class="btn btn-retry" id="btn-retry">🔄 Répéter</button>
+      </div>
+    </div>
+
+    <!-- Clarification Card -->
+    <div class="card card-clarification hidden" id="card-clarification">
+      <div class="clarification-icon">🤔</div>
+      <div class="clarification-question" id="clarification-question"></div>
+      <div class="clarification-actions">
+        <button class="btn btn-mic-clarify" id="btn-mic-clarify">🎙️ Répondre</button>
+        <div class="clarification-type-row">
+          <input type="text" class="clarification-input" id="clarification-input" placeholder="Ou tapez votre réponse…">
+          <button class="btn btn-type-clarify" id="btn-type-clarify">→</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 2 — DASHBOARD
+       ══════════════════════════════════════════ -->
+  <div class="screen" id="screen-dashboard">
+    <div class="screen-scroll">
+      <h2 class="section-title">📊 Tableau de bord</h2>
+
+      <div class="dash-card">
+        <div class="dash-card-title">💊 Médicaments d'aujourd'hui</div>
+        <div id="dash-meds-list"></div>
+      </div>
+
+      <div class="dash-card">
+        <div class="dash-card-title">📅 Prochains rendez-vous</div>
+        <div id="dash-apts-list"></div>
+        <button class="dash-add-link" onclick="showScreen('screen-medications')">+ Ajouter →</button>
+      </div>
+
+      <div class="dash-card">
+        <div class="dash-card-title">⚡ Actions rapides</div>
+        <div class="quick-actions">
+          <button class="quick-btn" id="qa-call">📞<span>Famille</span></button>
+          <button class="quick-btn" id="qa-weather">🌤️<span>Météo</span></button>
+          <button class="quick-btn" id="qa-news">📰<span>Actualités</span></button>
+          <button class="quick-btn" id="qa-meds">💊<span>Médicaments</span></button>
+        </div>
+      </div>
+
+      <div class="dash-card">
+        <div class="dash-card-title">🕐 Activité récente</div>
+        <div id="dash-history-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 3 — CONTACTS
+       ══════════════════════════════════════════ -->
+  <div class="screen" id="screen-contacts">
+    <div class="screen-scroll">
+      <div class="screen-header-row">
+        <h2 class="section-title">👥 Contacts</h2>
+        <button class="btn-add-item" id="btn-add-contact">+ Ajouter</button>
+      </div>
+      <div id="contacts-list"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 4 — MEDICATIONS
+       ══════════════════════════════════════════ -->
+  <div class="screen" id="screen-medications">
+    <div class="screen-scroll">
+      <div class="screen-header-row">
+        <h2 class="section-title">💊 Médicaments</h2>
+        <button class="btn-add-item" id="btn-add-med">+ Ajouter</button>
+      </div>
+
+      <div class="meds-section-title">Aujourd'hui</div>
+      <div id="meds-today-list"></div>
+
+      <div class="meds-section-title">Tous les médicaments</div>
+      <div id="meds-all-list"></div>
+
+      <div class="meds-section-title">Historique (7 jours)</div>
+      <div id="meds-history-list"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 5 — HISTORY
+       ══════════════════════════════════════════ -->
+  <div class="screen" id="screen-history">
+    <div class="screen-scroll">
+      <div class="screen-header-row">
+        <h2 class="section-title">📋 Historique</h2>
+        <button class="btn-danger-sm" id="btn-clear-history">🗑️ Effacer</button>
+      </div>
+      <div class="history-filter">
+        <button class="filter-btn active" data-filter="all">Tout</button>
+        <button class="filter-btn" data-filter="reminder">⏰ Rappels</button>
+        <button class="filter-btn" data-filter="call">📞 Appels</button>
+        <button class="filter-btn" data-filter="medication">💊 Médicaments</button>
+        <button class="filter-btn" data-filter="weather">🌤️ Météo</button>
+      </div>
+      <div id="history-list"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCREEN 6 — SETTINGS
+       ══════════════════════════════════════════ -->
+  <div class="screen" id="screen-settings">
+    <div class="screen-scroll">
+      <h2 class="section-title">⚙️ Paramètres</h2>
+
+      <!-- Profile -->
+      <div class="settings-group">
+        <div class="settings-group-title">👤 Profil</div>
+        <div class="form-field">
+          <label class="form-label">Votre prénom</label>
+          <input type="text" class="form-input" id="settings-name" placeholder="Votre prénom">
+        </div>
+        <button class="btn btn-save" id="btn-save-profile">💾 Enregistrer</button>
+      </div>
+
+
+      <!-- Voice -->
+      <div class="settings-group">
+        <div class="settings-group-title">🔊 Voix</div>
+        <div class="form-field">
+          <label class="form-label">Vitesse de la voix</label>
+          <div class="range-row">
+            <span class="range-label">Lent</span>
+            <input type="range" class="form-range" id="settings-speed" min="0.6" max="1.2" step="0.05" value="0.82">
+            <span class="range-label">Rapide</span>
+          </div>
+        </div>
+        <button class="btn btn-test" id="btn-test-voice">🔊 Tester la voix</button>
+      </div>
+
+      <!-- Smart Home -->
+      <div class="settings-group">
+        <div class="settings-group-title">🏠 Maison connectée</div>
+        <div class="form-field">
+          <label class="form-label">URL Home Assistant</label>
+          <input type="url" class="form-input" id="settings-ha-url" placeholder="http://192.168.1.x:8123">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Token d'accès</label>
+          <div class="key-row">
+            <input type="password" class="form-input" id="settings-ha-token" placeholder="Token longue durée">
+            <button class="show-key-btn" data-target="settings-ha-token">👁️</button>
+          </div>
+        </div>
+        <button class="btn btn-save" id="btn-save-settings">💾 Enregistrer tout</button>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="settings-group settings-danger">
+        <div class="settings-group-title">⚠️ Zone de danger</div>
+        <button class="btn btn-danger" id="btn-reset-all">🗑️ Réinitialiser toutes les données</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       BOTTOM NAVIGATION
+       ══════════════════════════════════════════ -->
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="nav-tab active" data-screen="screen-main">
+      <span class="nav-icon">🎙️</span>
+      <span class="nav-label">Samar</span>
+    </button>
+    <button class="nav-tab" data-screen="screen-dashboard">
+      <span class="nav-icon">📊</span>
+      <span class="nav-label">Tableau</span>
+    </button>
+    <button class="nav-tab" data-screen="screen-contacts">
+      <span class="nav-icon">👥</span>
+      <span class="nav-label">Contacts</span>
+    </button>
+    <button class="nav-tab" data-screen="screen-medications">
+      <span class="nav-icon">💊</span>
+      <span class="nav-label">Médicaments</span>
+    </button>
+    <button class="nav-tab" data-screen="screen-settings">
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label">Paramètres</span>
+    </button>
+  </nav>
+
+  <!-- ══════════════════════════════════════════
+       EMERGENCY OVERLAY
+       ══════════════════════════════════════════ -->
+  <div class="emergency-overlay hidden" id="emergency-overlay">
+    <div class="emergency-content">
+      <div class="emergency-siren">🚨</div>
+      <div class="emergency-title">APPEL D'URGENCE</div>
+      <div class="emergency-number" id="emergency-number">190</div>
+      <div class="emergency-symptoms" id="emergency-symptoms"></div>
+      <div class="emergency-countdown" id="emergency-countdown">Appel dans 3…</div>
+      <button class="emergency-cancel" id="emergency-cancel">Annuler</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MODAL OVERLAY
+       ══════════════════════════════════════════ -->
+  <div class="modal-overlay hidden" id="modal-overlay">
+    <div class="modal-box" id="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">Ajouter</h3>
+        <button class="modal-close" id="modal-close">×</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       TOAST
+       ══════════════════════════════════════════ -->
+  <div class="toast" id="toast"></div>
+
+  <!-- App Logic -->
+  <script src="./app.js"></script>
+
+  <!-- Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('SW registered:', reg.scope))
+          .catch(err => console.warn('SW failed:', err));
+      });
+    }
+  </script>
+</body>
+</html>
